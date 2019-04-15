@@ -73,10 +73,10 @@ import org.eclipse.ui.PlatformUI;
 import org.knime.core.node.NodeLogger;
 import org.knime.python2.PythonVersion;
 import org.knime.python2.config.CondaEnvironmentCreationObserver;
-import org.knime.python2.config.ManualEnvironmentsConfig;
 import org.knime.python2.config.PythonConfig;
 import org.knime.python2.config.PythonEnvironmentType;
 import org.knime.python2.config.PythonEnvironmentTypeConfig;
+import org.knime.python2.prefs.PythonEnvironmentTypePreferencePanel;
 import org.knime.python2.prefs.PythonPreferencePage;
 
 /**
@@ -103,7 +103,7 @@ public class DLPythonPreferencePage extends PreferencePage implements IWorkbench
 
     private DLCondaEnvironmentPreferencePanel m_condaEnvironmentPanel;
 
-    private ManualEnvironmentsPreferencePanel m_manualEnvironmentPanel;
+    private DLManualEnvironemtPreferencePanel m_manualEnvironmentPanel;
 
     @Override
     public void init(final IWorkbench workbench) {
@@ -154,11 +154,11 @@ public class DLPythonPreferencePage extends PreferencePage implements IWorkbench
 
         // Manual environment configuration:
 
-        final ManualEnvironmentsConfig manualEnvironmentsConfig = new ManualEnvironmentsConfig();
-        m_configs.add(manualEnvironmentsConfig);
-        // TODO ManualEnvironmentPreferencePanel was package private: Should it be?
+        final DLManualEnvironmentConfig manualEnvironmentConfig = new DLManualEnvironmentConfig();
+        m_configs.add(manualEnvironmentConfig);
         m_manualEnvironmentPanel =
-            new ManualEnvironmentsPreferencePanel(manualEnvironmentsConfig, environmentConfigurationPanel);
+            new DLManualEnvironemtPreferencePanel(manualEnvironmentConfig, environmentConfigurationPanel);
+
 
         // Hooks
 
