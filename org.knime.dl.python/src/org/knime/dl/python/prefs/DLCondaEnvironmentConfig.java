@@ -59,7 +59,7 @@ import org.knime.python2.config.PythonConfigStorage;
  *
  * @author Benjamin Wilhelm, KNIME GmbH, Konstanz, Germany
  */
-public class DLCondaEnvironmentConfig extends AbstractPythonEnvironmentConfig {
+final class DLCondaEnvironmentConfig extends AbstractPythonEnvironmentConfig {
 
     private static final String CFG_KEY_CONDA_DIRECTORY_PATH = "condaDirectoryPath";
 
@@ -73,21 +73,26 @@ public class DLCondaEnvironmentConfig extends AbstractPythonEnvironmentConfig {
 
     private final SettingsModelString m_condaDirectory;
 
-    private final SettingsModelStringArray m_availableEnvironments =
-        new SettingsModelStringArray(CFG_KEY_DUMMY, new String[]{DEFAULT_ENVIRONMENT_NAME});
+    private final SettingsModelStringArray m_availableEnvironments;
 
-    private final SettingsModelString m_condaInstallationInfo = new SettingsModelString(CFG_KEY_DUMMY, "");
+    private final SettingsModelString m_condaInstallationInfo;
 
-    private final SettingsModelString m_condaInstallationError = new SettingsModelString(CFG_KEY_DUMMY, "");
+    private final SettingsModelString m_condaInstallationError;
 
     /**
      * Create a new conda environment config for deep learning.
      */
-    public DLCondaEnvironmentConfig() {
+    DLCondaEnvironmentConfig() {
         // TODO Get the conda path from python if configured. Only if nothing was saved yet. Also the default value!
+        // Configuration
         m_condaDirectory = new SettingsModelString(CFG_KEY_CONDA_DIRECTORY_PATH,
             CondaEnvironmentsConfig.getDefaultCondaInstallationDirectory());
-        m_environmentName = new SettingsModelString(CFG_KEY_CONDA_ENV_NAME, CFG_KEY_CONDA_ENV_NAME);
+        m_environmentName = new SettingsModelString(CFG_KEY_CONDA_ENV_NAME, DEFAULT_ENVIRONMENT_NAME);
+
+        // Helper settings models
+        m_availableEnvironments = new SettingsModelStringArray(CFG_KEY_DUMMY, new String[]{DEFAULT_ENVIRONMENT_NAME});
+        m_condaInstallationInfo = new SettingsModelString(CFG_KEY_DUMMY, "");
+        m_condaInstallationError = new SettingsModelString(CFG_KEY_DUMMY, "");
     }
 
     @Override
@@ -140,5 +145,16 @@ public class DLCondaEnvironmentConfig extends AbstractPythonEnvironmentConfig {
     public void loadConfigFrom(final PythonConfigStorage storage) {
         storage.loadStringModel(m_condaDirectory);
         storage.loadStringModel(m_environmentName);
+    }
+
+    /**
+     * Load the default configuration
+     */
+    void loadDefaults() {
+        m_condaDirectory.setStringValue(CondaEnvironmentsConfig.getDefaultCondaInstallationDirectory());
+        m_environmentName.setStringValue(DEFAULT_ENVIRONMENT_NAME);
+        m_availableEnvironments.setStringArrayValue(new String[]{DEFAULT_ENVIRONMENT_NAME});
+        m_condaInstallationInfo.setStringValue("");
+        m_condaInstallationError.setStringValue("");
     }
 }
