@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.python2.config.AbstractPythonConfigPanel;
+import org.knime.python2.prefs.InstallationStatusDisplayPanel;
 
 /**
  * @author Benjamin Wilhelm, KNIME GmbH, Konstanz, Germany
@@ -67,8 +68,8 @@ final class DLPythonConfigSelectionPanel extends AbstractPythonConfigPanel<DLPyt
         final Composite panel = getPanel();
 
         // Create the radio buttons
-        final ConfigSelectionRadioGroup configSelection =
-            new ConfigSelectionRadioGroup(config.getConfigSelection(), panel);
+        final ConfigSelectionRadioGroup configSelection = new ConfigSelectionRadioGroup(config.getConfigSelection(),
+            config.getPythonInstallationInfo(), config.getPythonInstallationError(), panel);
         final GridData gridData = new GridData();
         gridData.grabExcessHorizontalSpace = true;
         gridData.horizontalAlignment = SWT.FILL;
@@ -88,19 +89,27 @@ final class DLPythonConfigSelectionPanel extends AbstractPythonConfigPanel<DLPyt
 
         private final Button m_dlConfigRadioButton;
 
-        public ConfigSelectionRadioGroup(final SettingsModelString configSelectionConfig, final Composite parent) {
+        public ConfigSelectionRadioGroup(final SettingsModelString configSelectionConfig,
+            final SettingsModelString defaultInstallationInfo, final SettingsModelString defaultInstallationError,
+            final Composite parent) {
             super(parent, SWT.NONE);
 
             // Layout
             final RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-            rowLayout.pack = false;
+            rowLayout.pack = true;
             rowLayout.justify = true;
+            rowLayout.spacing = 10;
             setLayout(rowLayout);
 
-            // Radio buttons
+            // Python radio button
             m_pythonConfigRadioButton = new Button(this, SWT.RADIO);
             // TODO more descriptive text!
             m_pythonConfigRadioButton.setText(DLPythonConfigSelection.PYTHON.getName());
+
+            // Installation info
+            Object unused = new InstallationStatusDisplayPanel(defaultInstallationInfo, defaultInstallationError, this);
+
+            // DL radio button
             m_dlConfigRadioButton = new Button(this, SWT.RADIO);
             m_dlConfigRadioButton.setText(DLPythonConfigSelection.DL.getName());
             pack();
